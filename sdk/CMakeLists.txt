@@ -24,6 +24,7 @@ FILE(GLOB SLLIDAR_SDK_SRC
   "${SLLIDAR_SDK_PATH}/src/arch/linux/*.cpp"
   "${SLLIDAR_SDK_PATH}/src/hal/*.cpp"
   "${SLLIDAR_SDK_PATH}/src/*.cpp"
+  "${SLLIDAR_SDK_PATH}/src/*.c"
   "${SLLIDAR_SDK_PATH}/src/dataunpacker/*.cpp"
   "${SLLIDAR_SDK_PATH}/src/dataunpacker/unpacker/*.cpp"
 )
@@ -37,6 +38,6 @@ include_directories(
   ${Boost_INCLUDE_DIRS}
 )
 
-add_library(rplidar_sdk SHARED src/rplidar_python_interface.cpp)
+add_library(rplidar_sdk SHARED ${SLLIDAR_SDK_SRC})
 
 set_target_properties(${PROJECT_NAME} PROPERTIES PUBLIC_HEADER include/rplidar_python_interface.h)

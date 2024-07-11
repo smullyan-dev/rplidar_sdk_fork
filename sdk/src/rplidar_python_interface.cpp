@@ -10,13 +10,15 @@ void rplidar_create_driver()
 {
     if(drv==NULL)
         drv = *sl::createLidarDriver();
+    printf("RPLidar driver created");
 }
 
-bool rplidar_connect(const char* device, int baudrate)
+bool rplidar_connect_cpp(const char* device = "/dev/ttyUSB0", int baudrate = 1000000)
 {
     rplidar_create_driver();
     sl_lidar_response_device_info_t devinfo;
     channel = *sl::createSerialPortChannel(std::string(device), baudrate);
+    printf("Try to connect to %s", device);
     if (SL_IS_OK((drv)->connect(channel))) 
     {
         if(SL_IS_OK(drv->getDeviceInfo(devinfo)))
@@ -47,17 +49,36 @@ bool rplidar_connect(const char* device, int baudrate)
     return is_connected;
 }
 
-bool rplidar_start_scan()
+bool rplidar_start_scan_cpp()
 {
     return SL_IS_OK(drv->startScan(0,1));
 }
 
-bool rplidar_stop_scan()
+bool rplidar_stop_scan_cpp()
 {   
     return SL_IS_OK(drv->stop());
 }
 
-bool rplidar_set_motor_speed(unsigned short speed)
+bool rplidar_set_motor_speed_cpp(unsigned short speed)
 {
     return SL_IS_OK(drv->setMotorSpeed(speed));
 }
+
+bool rplidar_exit_cpp()
+{
+    if(drv) {
+        printf("Closing rplidar lib.");
+        delete drv;
+        drv = NULL;
+    }
+}
+
+class Cleanup {
+public:
+    ~Cleanup()
+    {
+        rplidar_exit_cpp();
+    }
+}
+
+cleanup = Cleanup();
