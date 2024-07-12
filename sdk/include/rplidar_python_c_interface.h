@@ -6,3 +6,6 @@ bool rplidar_connect(const char* device, int baudrate);
 bool rplidar_start_scan();
 bool rplidar_stop_scan();
 bool rplidar_set_motor_speed(unsigned short speed);
+unsigned int rplidar_get_scan_data(void* nodes, unsigned int count);
+unsigned int rplidar_get_scan_data_float(void* nodes, unsigned int count);
+
