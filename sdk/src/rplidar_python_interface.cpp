@@ -16,7 +16,7 @@ void rplidar_create_driver()
     printf("RPLidar driver created");
 }
 
-bool rplidar_connect_cpp(const char* device = "/dev/ttyUSB0", int baudrate = 1000000)
+bool rplidar_connect(const char* device = "/dev/ttyUSB0", int baudrate = 1000000)
 {
     rplidar_create_driver();
     sl_lidar_response_device_info_t devinfo;
@@ -46,17 +46,17 @@ bool rplidar_connect_cpp(const char* device = "/dev/ttyUSB0", int baudrate = 100
     return is_connected;
 }
 
-bool rplidar_start_scan_cpp()
+bool rplidar_start_scan()
 {
     return SL_IS_OK(drv->startScan(0,1));
 }
 
-bool rplidar_stop_scan_cpp()
+bool rplidar_stop_scan()
 {   
     return SL_IS_OK(drv->stop());
 }
 
-bool rplidar_set_motor_speed_cpp(unsigned short speed)
+bool rplidar_set_motor_speed(unsigned short speed)
 {
     if(SL_IS_OK(drv->setMotorSpeed(speed)))
     {
@@ -66,7 +66,7 @@ bool rplidar_set_motor_speed_cpp(unsigned short speed)
     return false;
 }
 
-bool rplidar_exit_cpp()
+bool rplidar_exit()
 {
     if(drv) {
         printf("Closing rplidar lib.");
@@ -76,7 +76,7 @@ bool rplidar_exit_cpp()
     return true;
 }
 
-unsigned int rplidar_get_scan_data_cpp(sl_lidar_response_measurement_node_hq_t* nodes, unsigned int count)
+unsigned int rplidar_get_scan_data(sl_lidar_response_measurement_node_hq_t* nodes, unsigned int count)
 {
     size_t node_count = (size_t)count;
     if (SL_IS_OK(drv->grabScanDataHq(nodes, node_count))) 
@@ -98,11 +98,11 @@ unsigned int rplidar_get_scan_data_cpp(sl_lidar_response_measurement_node_hq_t* 
 }
 
 
-unsigned int rplidar_get_scan_data_float_cpp(scan_data_t* nodes, unsigned int count)
+unsigned int rplidar_get_scan_data_float(scan_data_t* nodes, unsigned int count)
 {
     sl_lidar_response_measurement_node_hq_t _nodes[8192];
     size_t node_count = count;
-    unsigned int scan_size = rplidar_get_scan_data_cpp(_nodes, node_count);
+    unsigned int scan_size = rplidar_get_scan_data(_nodes, node_count);
     for(unsigned int i = 0; i < scan_size; ++i)
     {   
         nodes[i].timestamp = (float(i)*scan_duration/float(node_count));
@@ -118,7 +118,7 @@ class Cleanup {
 public:
     ~Cleanup()
     {
-        rplidar_exit_cpp();
+        rplidar_exit();
     }
 }
 
