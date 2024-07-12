@@ -21,17 +21,11 @@ bool rplidar_connect_cpp(const char* device = "/dev/ttyUSB0", int baudrate = 100
     rplidar_create_driver();
     sl_lidar_response_device_info_t devinfo;
     channel = *sl::createSerialPortChannel(std::string(device), baudrate);
-    printf("Try to connect to %s", device);
     if (SL_IS_OK((drv)->connect(channel))) 
     {
         if(SL_IS_OK(drv->getDeviceInfo(devinfo)))
         {
             is_connected = true;
-            printf("SLAMTEC LIDAR S/N: ");
-            for (int pos = 0; pos < 16 ;++pos) {
-                printf("%02X", devinfo.serialnum[pos]);
-            }
-
             printf("\n"
                     "Firmware Ver: %d.%02d\n"
                     "Hardware Rev: %d\n"
